@@ -63,11 +63,13 @@ def curve_3pool():
     df['balance'] = df['balance'].astype(int)
     if len(df[(df.percent > 0.4) | (df.percent < 0.2)]):
         webhook = SyncWebhook.from_url(mUrl)
-        webhook.send("```" + tabulate(df, tablefmt="simple_grid", headers=["token", "balance", "percent"],
-                                      floatfmt=".2%", intfmt=',.0f', showindex='never') + "```")
+        webhook.send("```" + tabulate(df, headers=["token", "balance", "percent"], floatfmt=".2%", intfmt=',.0f',
+                                      showindex='never') + "```")
 
 
 if __name__ == "__main__":
+    webhook_init = SyncWebhook.from_url(mUrl)
+    webhook_init.send('Start Track Curve 3Pool!🔥')
     BKK = pytz.timezone("Asia/Bangkok")
     scheduler = BlockingScheduler()
     scheduler.add_job(curve_3pool, CronTrigger(timezone=BKK).from_crontab('*/15 * * * *'))
